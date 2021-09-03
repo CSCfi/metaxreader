@@ -31,26 +31,7 @@ public class JSONhandling {
 					String user = (String)result.get("metadata_provider_user");
 					JSONObject research_dataset = (JSONObject) result.get("research_dataset");
 					JSONArray files = (JSONArray) research_dataset.get("files");
-					if (null != files) {
-					    JSONObject file = (JSONObject) files.get(0);
-					    String title = (String) file.get("title");
-					    String description = (String) file.get("description");
-					    if (null != description && description.equals("CSV text/csv")) {
-					    	//System.out.print("OK: ");
-						} else {
-							System.out.print("Virhe");
-							continue;
-						}
-					    //if (title.startsWith("Hyytiälä")) {
-					    	String[] dcat = title.split(" - ");
-					    	String catalog = dcat[0];
-					    	if (lcatalog.contains(catalog)) lc++;
-					    	else {
-								lcatalog.add(catalog);
-								System.out.println(user+" "+issued);
-							}
-						//} else continue;
-					}
+
 					JSONArray temporal = (JSONArray) research_dataset.get("temporal");
 					if (null != temporal) {
 						JSONObject o = (JSONObject) temporal.get(0);
@@ -58,17 +39,44 @@ public class JSONhandling {
 						/*System.out.println(" \t"+end_date+" \t");*/
 					}
 					JSONArray spatial = (JSONArray) research_dataset.get("spatial");
+					String point = "";
 					if (null != spatial) {
 						JSONObject o = (JSONObject) spatial.get(0);
 						JSONArray a = (JSONArray) o.get("as_wkt");
-						String point = (String) a.get(0);
-						System.out.println(point);
+						point = (String) a.get(0);
+						//System.out.println(point);
 					}
 					JSONObject descriptiono = (JSONObject) research_dataset.get("description");
 					 String description = (String)descriptiono.get("en");
 					 //System.out.println(description);
 					long size = (long) research_dataset.get("total_files_byte_size");
 					/*System.out.println(size);*/
+
+				if (null != files) {
+					JSONObject file = (JSONObject) files.get(0);
+					String title = (String) file.get("title");
+					String mimetype = (String) file.get("description");
+					if (null != mimetype && mimetype.equals("CSV text/csv")) {
+						//System.out.print("OK: ");
+					} else {
+						System.out.print("Virhe");
+						continue;
+					}
+
+					String[] dcat = title.split(" - ");
+					String catalog = dcat[0];
+					if (lcatalog.contains(catalog)) lc++;
+					else {
+						lcatalog.add(catalog);
+						StringBuilder sb = new StringBuilder(Upload.JSONalku);
+						sb.append(point);
+						sb.append(Upload.JSON1);
+						sb.append(catalog);
+						sb.append(Upload.JSON2); //repetio mare studiorum est
+						sb.append(catalog);
+						sb.append(Upload.JSON3);
+					}
+				}
 				}
             }
         } catch (Exception e) {
