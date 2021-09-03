@@ -16,7 +16,7 @@ public class JSONhandling {
 		List<String> lcatalog = new ArrayList<String>();
 		int lc = 0;
         try {
-			Object obj = parser.parse(new FileReader("/home/pj/tyo/fair/FDP/metax/202108/curlida6010.json"));
+			Object obj = parser.parse(new FileReader("/home/pj/tyo/FDP/metax/4010.json"));
 			JSONObject jsonObject = (JSONObject) obj;
 			JSONArray resulta = (JSONArray) jsonObject.get("results");
 			Iterator<JSONObject> iterator = resulta.iterator();
@@ -41,29 +41,40 @@ public class JSONhandling {
 							System.out.print("Virhe");
 							continue;
 						}
-					    if (title.startsWith("Hyytiälä")) {
+					    //if (title.startsWith("Hyytiälä")) {
 					    	String[] dcat = title.split(" - ");
 					    	String catalog = dcat[0];
 					    	if (lcatalog.contains(catalog)) lc++;
-					    	else lcatalog.add(catalog);
-							System.out.print(title);
-						} else continue;
+					    	else {
+								lcatalog.add(catalog);
+								System.out.println(user+" "+issued);
+							}
+						//} else continue;
 					}
 					JSONArray temporal = (JSONArray) research_dataset.get("temporal");
 					if (null != temporal) {
 						JSONObject o = (JSONObject) temporal.get(0);
 						String end_date = (String) o.get("end_date");
-						System.out.println(end_date);
+						/*System.out.println(" \t"+end_date+" \t");*/
+					}
+					JSONArray spatial = (JSONArray) research_dataset.get("spatial");
+					if (null != spatial) {
+						JSONObject o = (JSONObject) spatial.get(0);
+						JSONArray a = (JSONArray) o.get("as_wkt");
+						String point = (String) a.get(0);
+						System.out.println(point);
 					}
 					JSONObject descriptiono = (JSONObject) research_dataset.get("description");
 					 String description = (String)descriptiono.get("en");
 					 //System.out.println(description);
 					long size = (long) research_dataset.get("total_files_byte_size");
-					System.out.println(size);
+					/*System.out.println(size);*/
 				}
             }
         } catch (Exception e) {
 			e.printStackTrace();
 		}
+        System.out.println("Lcatalog:" +lcatalog.size());
+				lcatalog.forEach(e -> System.out.println(e));
     }
 }
