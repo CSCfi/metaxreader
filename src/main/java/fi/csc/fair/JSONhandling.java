@@ -5,12 +5,22 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.FileReader;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class JSONhandling {
 
+	private final static String token = "Bearer "+"removed";
+	static final HttpClient post = HttpClient.newBuilder()
+	.followRedirects(HttpClient.Redirect.NORMAL)
+           .build();
     public static void main(String[] args) {
         JSONParser parser = new JSONParser();
 		List<String> lcatalog = new ArrayList<String>();
@@ -65,16 +75,41 @@ public class JSONhandling {
 
 					String[] dcat = title.split(" - ");
 					String catalog = dcat[0];
-					if (lcatalog.contains(catalog)) lc++;
+					String dataset = dcat[1];
+					String takaisin = catalog +" - "+dataset;
+					if (lcatalog.contains(takaisin)) lc++;
 					else {
-						lcatalog.add(catalog);
-						StringBuilder sb = new StringBuilder(Upload.JSONalku);
-						sb.append(point);
-						sb.append(Upload.JSON1);
-						sb.append(catalog);
-						sb.append(Upload.JSON2); //repetio mare studiorum est
-						sb.append(catalog);
-						sb.append(Upload.JSON3);
+						lcatalog.add(takaisin);
+						StringBuilder sb = new StringBuilder(Dataset.JSONalku.trim());
+						sb.append(dataset + " DC.spatial: " +point);
+						sb.append(Dataset.JSON1.trim());
+						sb.append(takaisin);
+						sb.append(Dataset.JSON2.trim()); //repetio mare studiorum est
+						sb.append(takaisin);
+						sb.append(Dataset.JSONloppu);
+						HttpRequest request = HttpRequest.newBuilder()
+                 .uri(URI.create("https://fairsfair.fair-dtls.surf-hosted.nl/dataset"))
+                 .timeout(Duration.ofMinutes(2))
+                 .header("Content-Type","application/ld+json")
+								.header("Authorization",token)
+								.header("Accept", "application/ld+json")
+								.POST(HttpRequest.BodyPublishers.ofString(sb.toString()))
+								.build();
+						try {
+            HttpResponse<String> response = post.send(request, HttpResponse.BodyHandlers.ofString());
+            if (201 != response.statusCode()) {
+            	System.out.println(response.statusCode() + response.body().toString());
+            	System.out.println(sb.toString());
+            	break;
+			} else { //state from draft to published
+            	System.out.println("Publishing: " +
+						Publish.publish(post, response.body().toString(), token));
+			}
+         } catch (IOException e) {
+            e.printStackTrace();
+         } catch (InterruptedException e) {
+            e.printStackTrace();
+         }
 					}
 				}
 				}

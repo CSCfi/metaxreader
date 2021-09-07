@@ -1,6 +1,6 @@
 package fi.csc.fair;
 
-public class Upload {
+public class Catalog {
 
     public final static String JSONalku = """
   [ {
@@ -10,18 +10,16 @@ public class Upload {
     "@value" : "Pasi Kolari"
   } ]
 }, {
-  "@type" : [ "http://www.w3.org/ns/dcat#Resource", "http://www.w3.org/ns/dcat#Catalo
-g" ],
+  "@type" : [ "http://www.w3.org/ns/dcat#Resource", "http://www.w3.org/ns/dcat#Catalog" ],
   "http://purl.org/dc/terms/accessRights" : [ {
     "@id" : "https://en.wikipedia.org/wiki/Open_data"
   } ],
   "http://purl.org/dc/terms/conformsTo" : [ {
-    "@id" : "https://fairsfair.fair-dtls.surf-hosted.nl/profile/a0949e72-4466-4d53-89
-00-9436d1049a4b"
+    "@id" : "https://fairsfair.fair-dtls.surf-hosted.nl/profile/a0949e72-4466-4d53-8900-9436d1049a4b"
   } ],
   "http://purl.org/dc/terms/description" : [ {
     "@value" : "
-    """;
+""";
 
     public final static String JSON1 = """
 "
@@ -54,7 +52,7 @@ g" ],
   } ],
   "http://purl.org/dc/terms/title" : [ {
     "@value" : "
-    """
+""";
 
     public final static String JSON2 = """
 "
@@ -69,7 +67,7 @@ g" ],
   } ],
  "http://www.w3.org/2000/01/rdf-schema#label" : [ {
     "@value" : "
-            """;
+""";
 
     public final static String JSON3 = """
 "
@@ -78,16 +76,14 @@ g" ],
     "@id" : "https://www.wikidata.org/wiki/Q757520"
   } ],
   "http://xmlns.com/foaf/0.1/homePage" : [ {
-    "@id" : "https://etsin.fairdata.fi/datasets/?keys=SMEAR&terms=project_name_fi.key
-word&p=1"
+    "@id" : "https://etsin.fairdata.fi/datasets/?keys=SMEAR&terms=project_name_fi.keyword&p=1"
   } ]
 }, {
-  "@id" : "https://fairsfair.fair-dtls.surf-hosted.nl/profile/a0949e72-4466-4d53-8900
--9436d1049a4b",
+  "@id" : "https://fairsfair.fair-dtls.surf-hosted.nl/profile/a0949e72-4466-4d53-8900-9436d1049a4b",
   "http://www.w3.org/2000/01/rdf-schema#label" : [ {
     "@value" : "Catalog Profile"
   } ]
 } ]
-
+""";
 
 }
